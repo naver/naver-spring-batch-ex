@@ -2,7 +2,6 @@ package com.naver.spring.batch.extension.test.sample;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -24,16 +23,17 @@ import javax.sql.DataSource;
  * @author fomuo@navercorp.com
  */
 @Configuration
-@EnableBatchProcessing
 public class ImportUserJobConfig {
-	@Autowired
-	public JobBuilderFactory jobBuilderFactory;
+	private final JobBuilderFactory jobBuilderFactory;
+	private final StepBuilderFactory stepBuilderFactory;
+	private final DataSource dataSource;
 
 	@Autowired
-	public StepBuilderFactory stepBuilderFactory;
-
-	@Autowired
-	public DataSource dataSource;
+	public ImportUserJobConfig(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
+		this.jobBuilderFactory = jobBuilderFactory;
+		this.stepBuilderFactory = stepBuilderFactory;
+		this.dataSource = dataSource;
+	}
 
 	// tag::readerwriterprocessor[]
 	@Bean

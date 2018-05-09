@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
  * @author fomuo@navercorp.com
  */
 @Configuration
-public class TestConfiguration {
+public class TestConfig {
 	@Bean
 	public JobLauncherTestUtils jobLauncherTestUtils() {
-		return jobLauncherTestUtils();
+		return new JobLauncherTestUtils();
 	}
 }
