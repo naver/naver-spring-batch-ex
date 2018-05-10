@@ -11,6 +11,6 @@
 
 	<modules>
 		<module>naver-spring-batch-extension</module>
-		<module>naver-spring-batch-extension-test</module>
+		<module>naver-spring-batch-example</module>
 	</modules>
 </project>
