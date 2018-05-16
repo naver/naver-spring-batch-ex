@@ -11,9 +11,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-/**
- * @author fomuo@navercorp.com
- */
 @RunWith(SpringRunner.class)
 @AutoConfigureJdbc
 @Import({ BatchConfig.class, AbstractJobTest.TestConfig.class })

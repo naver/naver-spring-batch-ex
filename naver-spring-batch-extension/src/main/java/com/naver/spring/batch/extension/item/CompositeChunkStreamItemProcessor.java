@@ -12,9 +12,6 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-/**
- * @author fomuo@navercorp.com
- */
 public class CompositeChunkStreamItemProcessor<I, O> implements ItemProcessor<I, O>, ChunkStream<I>, InitializingBean {
 	private Logger log = LoggerFactory.getLogger(CompositeChunkStreamItemProcessor.class);
 

@@ -3,9 +3,6 @@ package com.naver.spring.batch.sample.job.sample;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 
-/**
- * @author fomuo@navercorp.com
- */
 @Slf4j
 public class PersonItemProcessor implements ItemProcessor<Person, Person> {
 

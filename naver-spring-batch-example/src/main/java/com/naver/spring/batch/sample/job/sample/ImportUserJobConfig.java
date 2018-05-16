@@ -22,10 +22,6 @@ import org.springframework.core.io.ClassPathResource;
 import javax.sql.DataSource;
 import java.util.Arrays;
 
-
-/**
- * @author fomuo@navercorp.com
- */
 @Configuration
 public class ImportUserJobConfig {
 	private final JobBuilderFactory jobBuilderFactory;

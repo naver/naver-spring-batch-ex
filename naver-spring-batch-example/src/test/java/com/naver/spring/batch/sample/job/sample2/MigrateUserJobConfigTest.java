@@ -7,9 +7,6 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * @author fomuo@navercorp.com
- */
 @SpringBootTest(classes = MigrateUserJobConfig.class)
 public class MigrateUserJobConfigTest extends AbstractJobTest {
 
