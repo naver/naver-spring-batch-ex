@@ -1,10 +1,13 @@
 package com.naver.spring.batch.sample.job.sample;
 
+import com.naver.spring.batch.extension.item.CompositeChunkStreamItemProcessor;
+import com.naver.spring.batch.extension.item.filter.UnmodifiedItemFilterProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 
 /**
@@ -47,7 +51,7 @@ public class ImportUserJobConfig {
 
 	private Step step1() throws Exception {
 		return stepBuilderFactory.get("step1")
-				.<Person, Person> chunk(10)
+				.<Person, Person> chunk(3)
 				.reader(reader())
 				.processor(processor())
 				.writer(writer())
@@ -71,8 +75,15 @@ public class ImportUserJobConfig {
 		return reader;
 	}
 
-	private PersonItemProcessor processor() {
-		return new PersonItemProcessor();
+	private ItemProcessor<Person, Person> processor() throws Exception {
+		CompositeChunkStreamItemProcessor<Person, Person> p = new CompositeChunkStreamItemProcessor<>();
+		p.setDelegates(Arrays.asList(
+				new PersonItemProcessor(),
+				new UnmodifiedItemFilterProcessor<>()
+		));
+		p.afterPropertiesSet();
+		return p;
+//		return new UnmodifiedItemFilterProcessor<>();
 	}
 
 	private JdbcBatchItemWriter<Person> writer() {
