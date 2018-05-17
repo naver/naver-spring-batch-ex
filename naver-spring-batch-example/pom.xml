@@ -5,11 +5,11 @@
 
 	<groupId>com.naver.spring.batch</groupId>
 	<artifactId>naver-spring-batch-example</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>jar</packaging>
 
 	<name>naver-spring-batch-example</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Naver spring batch extension examples</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
