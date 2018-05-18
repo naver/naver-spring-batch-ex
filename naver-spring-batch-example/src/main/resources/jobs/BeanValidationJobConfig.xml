@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+	   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+
+	<job id="beanValidationJob" xmlns="http://www.springframework.org/schema/batch">
+		<step id="beanValidationStep" >
+			<tasklet>
+				<chunk reader="sampleListItemReader" processor="validatingItemProcessor" writer="loggingItemWriter" commit-interval="10" />
+			</tasklet>
+		</step>
+	</job>
+
+	<bean id="sampleListItemReader" class="com.naver.spring.batch.sample.job.sample3_validation.SampleIteratorItemReader"/>
+
+	<bean id="validatingItemProcessor" class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+		<property name="validator">
+			<bean class="org.springframework.batch.item.validator.SpringValidator">
+				<property name="validator">
+					<bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="loggingItemWriter" class="com.naver.spring.batch.sample.config.LoggingItemWriter"/>
+</beans>
