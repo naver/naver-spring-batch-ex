@@ -1,5 +1,6 @@
 package com.naver.spring.batch.sample.job.sample3_validation;
 
+import com.naver.spring.batch.extension.validation.constraints.UrlExists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -20,5 +21,7 @@ public class People3 {
 	private String email;
 	private Date birthDay;
 	private String phoneNo;
+
+	@UrlExists
 	private String homepageUrl;
 }
