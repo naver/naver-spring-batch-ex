@@ -18,16 +18,26 @@ import java.util.List;
  *
  * @author 스포츠_개발 (dl_sports_sweng@navercorp.com)
  */
-public class UnmodifiedItemFilterProcessor<I, O> implements ItemProcessor<I, O>, ChunkStream<I> {
+public class UnmodifiedItemFilterProcessor<T> implements ItemProcessor<T, T>, ChunkStream<T> {
 	private Logger log = LoggerFactory.getLogger(UnmodifiedItemFilterProcessor.class);
 
-	@Override
-	public O process(I item) throws Exception {
-		return (O) item;
+	private UnmodifiedItemChecker<T> checker;
+
+	public void setChecker(UnmodifiedItemChecker<T> checker) {
+		this.checker = checker;
 	}
 
 	@Override
-	public void createChunk(List<I> chunkItems) {
+	public T process(T item) throws Exception {
+		if (checker.check(item)) {
+			return null;
+		}
+
+		return item;
+	}
+
+	@Override
+	public void createChunk(List<T> chunkItems) {
 		log.debug("createChunk: {}", chunkItems);
 	}
 
