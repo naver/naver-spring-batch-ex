@@ -19,3 +19,23 @@ CREATE TABLE IF NOT EXISTS people3 (
     phone_no varchar(20),
     homepage_url varchar(1000)
 );
+
+CREATE TABLE IF NOT EXISTS sample4
+(
+    seq int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    id_int int NOT NULL,
+    id_str varchar(50) NOT NULL,
+    val_float decimal(5,2),
+    val_int int,
+    val_str varchar(50),
+    update_time datetime NOT NULL,
+);
+CREATE INDEX sample4_id_int_id_str_index ON sample4 (id_int, id_str);
+
+
+
+CREATE TABLE IF NOT EXISTS BATCHEX_ITEM_HASH (
+    item_key varchar(100) PRIMARY KEY NOT NULL,
+    item_hash varchar(50) NOT NULL,
+    expiry datetime NOT NULL
+);
