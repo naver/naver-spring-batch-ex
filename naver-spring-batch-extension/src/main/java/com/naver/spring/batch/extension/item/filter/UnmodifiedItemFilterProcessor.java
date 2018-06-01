@@ -6,19 +6,20 @@
  */
 package com.naver.spring.batch.extension.item.filter;
 
-import com.naver.spring.batch.extension.item.ChunkStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.listener.ChunkListenerSupport;
+import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.ItemProcessor;
-
-import java.util.List;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * UnmodifiedItemFilterProcessor 
  *
  * @author 스포츠_개발 (dl_sports_sweng@navercorp.com)
  */
-public class UnmodifiedItemFilterProcessor<T> implements ItemProcessor<T, T>, ChunkStream<T> {
+public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport implements ItemProcessor<T, T>, InitializingBean {
 	private Logger log = LoggerFactory.getLogger(UnmodifiedItemFilterProcessor.class);
 
 	private UnmodifiedItemChecker<T> checker;
@@ -28,8 +29,25 @@ public class UnmodifiedItemFilterProcessor<T> implements ItemProcessor<T, T>, Ch
 	}
 
 	@Override
+	public void beforeChunk(ChunkContext context) {
+		if (checker instanceof ChunkListener) {
+			((ChunkListener)checker).beforeChunk(context);
+		}
+	}
+
+	@Override
+	public void afterChunk(ChunkContext context) {
+		if (checker instanceof ChunkListener) {
+			((ChunkListener)checker).afterChunk(context);
+		}
+	}
+
+	@Override
 	public T process(T item) throws Exception {
 		if (checker.check(item)) {
+			if (log.isDebugEnabled()) {
+				log.debug("Item filtered : {}", item );
+			}
 			return null;
 		}
 
@@ -37,12 +55,6 @@ public class UnmodifiedItemFilterProcessor<T> implements ItemProcessor<T, T>, Ch
 	}
 
 	@Override
-	public void createChunk(List<T> chunkItems) {
-		log.debug("createChunk: {}", chunkItems);
-	}
-
-	@Override
-	public void completeChunk() {
-		log.debug("completeChunk");
+	public void afterPropertiesSet() throws Exception {
 	}
 }
