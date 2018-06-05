@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS sample4
     val_str varchar(50),
     update_time datetime NOT NULL,
 );
-CREATE INDEX sample4_id_int_id_str_index ON sample4 (id_int, id_str);
+CREATE INDEX IF NOT EXISTS sample4_id_int_id_str_index ON sample4 (id_int, id_str);
 
 
 
