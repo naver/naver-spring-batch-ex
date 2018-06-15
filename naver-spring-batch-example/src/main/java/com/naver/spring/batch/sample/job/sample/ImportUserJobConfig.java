@@ -1,6 +1,6 @@
 package com.naver.spring.batch.sample.job.sample;
 
-import com.naver.spring.batch.extension.item.CompositeChunkStreamItemProcessor;
+import com.naver.spring.batch.extension.item.ListenerSupportCompositeItemProcessor;
 import com.naver.spring.batch.extension.item.filter.UnmodifiedItemFilterProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -72,7 +72,7 @@ public class ImportUserJobConfig {
 	}
 
 	private ItemProcessor<Person, Person> processor() throws Exception {
-		CompositeChunkStreamItemProcessor<Person, Person> p = new CompositeChunkStreamItemProcessor<>();
+		ListenerSupportCompositeItemProcessor<Person, Person> p = new ListenerSupportCompositeItemProcessor<>();
 		p.setDelegates(Arrays.asList(
 				new PersonItemProcessor(),
 				new UnmodifiedItemFilterProcessor<>()
