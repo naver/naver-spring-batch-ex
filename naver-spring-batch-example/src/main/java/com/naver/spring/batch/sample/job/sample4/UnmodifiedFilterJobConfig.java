@@ -69,7 +69,7 @@ public class UnmodifiedFilterJobConfig {
 		filterProcessor.setChecker(checker);
 		filterProcessor.afterPropertiesSet();
 
-		ListenerSupportCompositeItemProcessor compositeProcessor = new ListenerSupportCompositeItemProcessor();
+		ListenerSupportCompositeItemProcessor<Sample4, Sample4> compositeProcessor = new ListenerSupportCompositeItemProcessor<>();
 		compositeProcessor.setDelegates(Arrays.asList(
 				new LogAndPassItemProcessor<Sample4>(),
 				filterProcessor
