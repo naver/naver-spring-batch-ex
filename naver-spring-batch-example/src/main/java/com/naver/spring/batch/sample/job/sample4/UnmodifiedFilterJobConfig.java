@@ -1,6 +1,6 @@
 package com.naver.spring.batch.sample.job.sample4;
 
-import com.naver.spring.batch.extension.item.CompositeChunkStreamItemProcessor;
+import com.naver.spring.batch.extension.item.ListenerSupportCompositeItemProcessor;
 import com.naver.spring.batch.extension.item.filter.HashUnmodifiedItemChecker;
 import com.naver.spring.batch.extension.item.filter.JdbcHashRepository;
 import com.naver.spring.batch.extension.item.filter.UnmodifiedItemFilterProcessor;
@@ -69,7 +69,7 @@ public class UnmodifiedFilterJobConfig {
 		filterProcessor.setChecker(checker);
 		filterProcessor.afterPropertiesSet();
 
-		CompositeChunkStreamItemProcessor compositeProcessor = new CompositeChunkStreamItemProcessor();
+		ListenerSupportCompositeItemProcessor<Sample4, Sample4> compositeProcessor = new ListenerSupportCompositeItemProcessor<>();
 		compositeProcessor.setDelegates(Arrays.asList(
 				new LogAndPassItemProcessor<Sample4>(),
 				filterProcessor

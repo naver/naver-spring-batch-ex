@@ -20,9 +20,10 @@ import java.util.stream.Collectors;
 
 public class JdbcHashRepository implements HashRepository {
 	private static final Logger log = LoggerFactory.getLogger(JdbcHashRepository.class);
+
 	private static final String selectSql = "SELECT item_hash FROM BATCHEX_ITEM_HASH WHERE item_key = ? AND expiry > ?";
-	private static final String saveSqlH2 = "MERGE INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) KEY (item_key) VALUES (?, ?, ?)";
-	private static final String saveSqlMysql = "REPLACE INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) VALUES (?, ?, ?)";
+	private static final String saveSqlForH2 = "MERGE INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) KEY (item_key) VALUES (?, ?, ?)";
+	private static final String saveSqlForMysql = "REPLACE INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) VALUES (?, ?, ?)";
 
 	private final JdbcOperations jdbcOperations;
 	private final TransactionOperations transactionOperations;
@@ -70,9 +71,9 @@ public class JdbcHashRepository implements HashRepository {
 
 	private String getSaveSql() {
 		if (this.databaseType == DatabaseType.H2) {
-			return saveSqlH2;
+			return saveSqlForH2;
 		} else {
-			return saveSqlMysql;
+			return saveSqlForMysql;
 		}
 	}
 }
