@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS player (
+    id BIGINT IDENTITY NOT NULL PRIMARY KEY,
+    player_name VARCHAR(100),
+    age INT NOT NULL,
+    height INT,
+    ranking INT
+);
+
 CREATE TABLE IF NOT EXISTS people (
     person_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
     first_name VARCHAR(20),
