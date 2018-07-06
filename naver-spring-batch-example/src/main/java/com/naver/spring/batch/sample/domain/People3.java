@@ -1,4 +1,4 @@
-package com.naver.spring.batch.sample.job.sample3_validation;
+package com.naver.spring.batch.sample.domain;
 
 import com.naver.spring.batch.extension.validation.constraints.UrlExists;
 import lombok.AllArgsConstructor;

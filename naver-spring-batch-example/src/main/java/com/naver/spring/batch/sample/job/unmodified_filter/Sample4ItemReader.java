@@ -1,5 +1,6 @@
-package com.naver.spring.batch.sample.job.sample4;
+package com.naver.spring.batch.sample.job.unmodified_filter;
 
+import com.naver.spring.batch.sample.domain.Sample4;
 import org.springframework.batch.item.ItemReader;
 
 import java.util.Arrays;

@@ -1,5 +1,6 @@
-package com.naver.spring.batch.sample.job.sample;
+package com.naver.spring.batch.sample.job.db_to_db;
 
+import com.naver.spring.batch.sample.domain.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 

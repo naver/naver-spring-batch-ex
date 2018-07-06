@@ -115,7 +115,6 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 
 	private String generateKey(T item) throws InvocationTargetException, IllegalAccessException {
-		//TODO prefix 로 step name 사용 처리?
 		StringBuilder sb = new StringBuilder(keyPrefix);
 
 		for (String keyProperty : keyPropertyNames) {

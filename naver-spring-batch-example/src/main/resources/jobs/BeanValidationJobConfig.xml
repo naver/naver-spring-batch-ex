@@ -13,7 +13,7 @@
 		</step>
 	</job>
 
-	<bean id="sampleListItemReader" class="com.naver.spring.batch.sample.job.sample3_validation.SampleIteratorItemReader"/>
+	<bean id="sampleListItemReader" class="com.naver.spring.batch.sample.job.bean_validation.SampleIteratorItemReader"/>
 
 	<bean id="validatingItemProcessor" class="org.springframework.batch.item.validator.ValidatingItemProcessor">
 		<property name="validator">

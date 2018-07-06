@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS player (
     player_name VARCHAR(100),
     age INT NOT NULL,
     height INT,
-    ranking INT
+    ranking INT NOT NULL
 );
+CREATE UNIQUE INDEX PLAYER_NAME_uindex ON PLAYER (PLAYER_NAME);
 
 CREATE TABLE IF NOT EXISTS people (
     person_id BIGINT IDENTITY NOT NULL PRIMARY KEY,

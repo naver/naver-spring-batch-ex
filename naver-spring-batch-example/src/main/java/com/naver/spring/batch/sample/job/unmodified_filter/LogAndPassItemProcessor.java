@@ -1,4 +1,4 @@
-package com.naver.spring.batch.sample.job.sample4;
+package com.naver.spring.batch.sample.job.unmodified_filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;

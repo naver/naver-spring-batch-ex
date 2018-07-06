@@ -51,15 +51,15 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 
 	private Map<String, Object> previousStartAfterValues;
 
-	private Class<T> mappingObjectType;
+	private Class<T> mappedClass;
 	private String tableName;
 	private String whereClause;
 	private Map<String, String> columnMappings;
 	private Map<String, Order> sortKeys;
 
-	public SimpleBeanJdbcPagingItemReader(Class<T> mappingObjectType) {
+	public SimpleBeanJdbcPagingItemReader(Class<T> mappedClass) {
 		setName(ClassUtils.getShortName(SimpleBeanJdbcPagingItemReader.class));
-		this.mappingObjectType = mappingObjectType;
+		this.mappedClass = mappedClass;
 	}
 
 	public void setDataSource(DataSource dataSource) {
@@ -80,7 +80,7 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		this.parameterValues = parameterValues;
 	}
 	/**
-	 * from clause 에 들어갈 테이블명. 빈값이면 mappingObjectType 의 camelcaseToUnderscore 처리된 class 명
+	 * from clause 에 들어갈 테이블명. 빈값이면 mappedClass 의 camelcaseToUnderscore 처리된 class 명
 	 *
 	 * @param tableName
 	 */
@@ -117,7 +117,7 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 
 		List<String> columnNames = new ArrayList<>();
 
-		for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(mappingObjectType)) {
+		for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(mappedClass)) {
 			if (pd.getWriteMethod() != null) {
 				String propName = pd.getName();
 
@@ -129,10 +129,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 			}
 		}
 
-		this.rowMapper = new BeanPropertyRowMapper<>(mappingObjectType);
+		this.rowMapper = new BeanPropertyRowMapper<>(mappedClass);
 
 		if (this.tableName == null) {
-			this.tableName = camelcaseToUnderscore(mappingObjectType.getSimpleName());
+			this.tableName = camelcaseToUnderscore(mappedClass.getSimpleName());
 		}
 
 		AbstractSqlPagingQueryProvider queryProvider = determineQueryProvider(dataSource);

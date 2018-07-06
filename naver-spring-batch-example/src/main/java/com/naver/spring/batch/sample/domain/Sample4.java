@@ -1,4 +1,4 @@
-package com.naver.spring.batch.sample.job.sample4;
+package com.naver.spring.batch.sample.domain;
 
 import com.naver.spring.batch.extension.item.filter.HashIgnore;
 import lombok.Data;

@@ -1,9 +1,10 @@
-package com.naver.spring.batch.sample.job.sample4;
+package com.naver.spring.batch.sample.job.unmodified_filter;
 
 import com.naver.spring.batch.extension.item.ListenerSupportCompositeItemProcessor;
 import com.naver.spring.batch.extension.item.filter.HashUnmodifiedItemChecker;
 import com.naver.spring.batch.extension.item.filter.JdbcHashRepository;
 import com.naver.spring.batch.extension.item.filter.UnmodifiedItemFilterProcessor;
+import com.naver.spring.batch.sample.domain.Sample4;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;

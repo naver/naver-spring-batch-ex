@@ -11,6 +11,6 @@ public class Player {
 	private long id;
 	private String playerName;
 	private int age;
-	private int height;
+	private Integer height;
 	private int ranking;
 }
