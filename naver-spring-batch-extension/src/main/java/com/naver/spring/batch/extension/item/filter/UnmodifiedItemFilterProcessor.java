@@ -23,6 +23,7 @@ public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport imple
 	private Logger log = LoggerFactory.getLogger(UnmodifiedItemFilterProcessor.class);
 
 	private UnmodifiedItemChecker<T> checker;
+	private boolean skipUnmodifiedItemCheck = false;
 
 	public void setChecker(UnmodifiedItemChecker<T> checker) {
 		this.checker = checker;
@@ -30,6 +31,9 @@ public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport imple
 
 	@Override
 	public void beforeChunk(ChunkContext context) {
+		String skipUnmodifiedItemCheck = (String)context.getStepContext().getJobParameters().get("UnmodifiedItemFilter-skip");
+		this.skipUnmodifiedItemCheck = Boolean.parseBoolean(skipUnmodifiedItemCheck);
+
 		if (checker instanceof ChunkListener) {
 			((ChunkListener)checker).beforeChunk(context);
 		}
@@ -48,7 +52,10 @@ public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport imple
 			if (log.isDebugEnabled()) {
 				log.debug("Item filtered : {}", item );
 			}
-			return null;
+
+			if (!skipUnmodifiedItemCheck) {
+				return null;
+			}
 		}
 
 		return item;
