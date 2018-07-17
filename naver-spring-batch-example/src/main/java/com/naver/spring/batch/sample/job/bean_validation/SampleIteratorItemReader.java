@@ -1,5 +1,6 @@
-package com.naver.spring.batch.sample.job.sample3_validation;
+package com.naver.spring.batch.sample.job.bean_validation;
 
+import com.naver.spring.batch.sample.domain.People3;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;

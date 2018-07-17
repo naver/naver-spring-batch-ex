@@ -1,4 +1,4 @@
-package com.naver.spring.batch.sample.job.sample;
+package com.naver.spring.batch.sample.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

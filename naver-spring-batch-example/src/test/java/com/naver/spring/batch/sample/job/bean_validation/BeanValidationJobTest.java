@@ -1,4 +1,4 @@
-package com.naver.spring.batch.sample.job.sample4;
+package com.naver.spring.batch.sample.job.bean_validation;
 
 import com.naver.spring.batch.sample.job.AbstractJobTest;
 import org.junit.Assert;
@@ -6,11 +6,14 @@ import org.junit.Test;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
-@SpringBootTest(classes = UnmodifiedFilterJobConfig.class)
-public class UnmodifiedFilterJobTest extends AbstractJobTest {
+@ContextConfiguration(locations = "classpath:jobs/BeanValidationJobConfig.xml")
+@SpringBootTest
+public class BeanValidationJobTest extends AbstractJobTest {
+
 	@Test
-	public void unmodifiedFilterJob() throws Exception {
+	public void beanValidationJob() throws Exception {
 		JobExecution jobExecution = jobLauncherTestUtils.launchJob();
 		Assert.assertEquals(jobExecution.getStatus(), BatchStatus.COMPLETED);
 	}

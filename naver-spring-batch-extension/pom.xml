@@ -2,14 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.naver.spring.batch</groupId>
 	<artifactId>naver-spring-batch-extension</artifactId>
 	<version>${revision}</version>
 	<packaging>jar</packaging>
 
 	<name>naver-spring-batch-extension</name>
 	<description>Naver spring batch extension</description>
+
+	<parent>
+		<groupId>com.naver.spring.batch</groupId>
+		<artifactId>naver-spring-batch-ex</artifactId>
+		<version>dev</version>
+	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,6 +23,7 @@
 		<spring-batch.version>3.0.9.RELEASE</spring-batch.version>
 		<jackson.version>2.9.6</jackson.version>
 		<slf4j-api.version>1.7.25</slf4j-api.version>
+		<logback.version>1.2.3</logback.version>
 	</properties>
 
 	<distributionManagement>
@@ -60,9 +65,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-api.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -89,6 +94,19 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

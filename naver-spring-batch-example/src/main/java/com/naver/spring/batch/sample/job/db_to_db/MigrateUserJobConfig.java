@@ -1,7 +1,6 @@
-package com.naver.spring.batch.sample.job.sample2;
+package com.naver.spring.batch.sample.job.db_to_db;
 
-import com.naver.spring.batch.sample.job.sample.Person;
-import com.naver.spring.batch.sample.job.sample.PersonItemProcessor;
+import com.naver.spring.batch.sample.domain.Person;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
