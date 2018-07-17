@@ -12,6 +12,8 @@
 	<properties>
 		<revision>0.1.0-SNAPSHOT</revision>
 		<jackson.version>2.9.6</jackson.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<modules>
