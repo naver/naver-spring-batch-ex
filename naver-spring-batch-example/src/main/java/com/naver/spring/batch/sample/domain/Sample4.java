@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class Sample4 {
-	private int seq;
 	private int idInt;
 	private String idStr;
 	private Float valFloat;

@@ -4,6 +4,7 @@ import com.naver.spring.batch.extension.item.ListenerSupportCompositeItemProcess
 import com.naver.spring.batch.extension.item.filter.HashUnmodifiedItemChecker;
 import com.naver.spring.batch.extension.item.filter.JdbcHashRepository;
 import com.naver.spring.batch.extension.item.filter.UnmodifiedItemFilterProcessor;
+import com.naver.spring.batch.sample.config.LoggingItemWriter;
 import com.naver.spring.batch.sample.domain.Sample4;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -11,10 +12,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,14 +47,10 @@ public class UnmodifiedFilterJobConfig {
 	private Step unmodifiedFilterStep() throws Exception {
 		return stepBuilderFactory.get("unmodifiedFilterStep")
 				.<Sample4, Sample4> chunk(2)
-				.reader(reader())
+				.reader(new Sample4ItemReader())
 				.processor(processor())
-				.writer(writer())
+				.writer(new LoggingItemWriter<>())
 				.build();
-	}
-
-	private ItemReader<Sample4> reader() {
-		return new Sample4ItemReader();
 	}
 
 	private ItemProcessor<Sample4, Sample4> processor() throws Exception {
@@ -70,25 +63,16 @@ public class UnmodifiedFilterJobConfig {
 		filterProcessor.setChecker(checker);
 		filterProcessor.afterPropertiesSet();
 
+		LogAndPassItemProcessor<Sample4> logAndPassItemProcessor = new LogAndPassItemProcessor<>();
+
 		ListenerSupportCompositeItemProcessor<Sample4, Sample4> compositeProcessor = new ListenerSupportCompositeItemProcessor<>();
 		compositeProcessor.setDelegates(Arrays.asList(
-				new LogAndPassItemProcessor<Sample4>(),
+				logAndPassItemProcessor,
 				filterProcessor
 		));
 
 		compositeProcessor.afterPropertiesSet();
 
 		return compositeProcessor;
-	}
-
-	private ItemWriter<Sample4> writer() {
-		JdbcBatchItemWriter<Sample4> writer = new JdbcBatchItemWriter<>();
-		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-		writer.setSql("INSERT INTO sample4 (id_int, id_str, val_float, val_int, val_str, update_time) " +
-				"VALUES (:idInt, :idStr, :valFloat, :valInt, :valStr, :updateTime)");
-		writer.setDataSource(dataSource);
-		writer.afterPropertiesSet();
-
-		return writer;
 	}
 }

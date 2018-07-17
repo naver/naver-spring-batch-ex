@@ -8,7 +8,7 @@ public class LogAndPassItemProcessor<T> implements ItemProcessor<T, T> {
 
 	@Override
 	public T process(T item) throws Exception {
-		log.info("process: {}", item.toString());
+		log.info("Process: {}", item);
 
 		//noinspection unchecked
 		return item;
