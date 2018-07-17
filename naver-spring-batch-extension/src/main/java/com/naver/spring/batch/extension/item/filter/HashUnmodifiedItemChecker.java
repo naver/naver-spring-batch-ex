@@ -28,6 +28,9 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	private HashRepository hashRepository;
 	private MessageDigest md;
 	private List<String> keyPropertyNames;
+	private List<PropertyDescriptor> keyPropertyDescriptors;
+	private List<PropertyDescriptor> hashPropertyDescriptors;
+
 	private int expiry;
 	private List<ItemHash> chunkItemHashes = new ArrayList<>();
 	private String keyPrefix;
@@ -115,14 +118,25 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 
 	private String generateKey(T item) throws InvocationTargetException, IllegalAccessException {
+		if (this.keyPropertyDescriptors == null) {
+			List<PropertyDescriptor> pds = new ArrayList<>(keyPropertyNames.size());
+
+			for (String keyProperty : keyPropertyNames) {
+				PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(item.getClass(), keyProperty);
+
+				Assert.notNull(propertyDescriptor, "'" + keyProperty + "' is invalid property name");
+				Assert.isTrue(BeanUtils.isSimpleValueType(propertyDescriptor.getPropertyType()),
+						"'" + keyProperty + "' value type must be simple value");
+
+				pds.add(propertyDescriptor);
+			}
+
+			this.keyPropertyDescriptors = Collections.unmodifiableList(pds);
+		}
+
 		StringBuilder sb = new StringBuilder(keyPrefix);
 
-		for (String keyProperty : keyPropertyNames) {
-			PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(item.getClass(), keyProperty);
-
-			Assert.isTrue(BeanUtils.isSimpleValueType(propertyDescriptor.getPropertyType()),
-					keyProperty + " value type must be simple value");
-
+		for (PropertyDescriptor propertyDescriptor : keyPropertyDescriptors) {
 			Method method = propertyDescriptor.getReadMethod();
 			Object value = method.invoke(item);
 
@@ -133,24 +147,34 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	}
 
 	private String generateHashValue(T item) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+		if (this.hashPropertyDescriptors == null) {
+			List<PropertyDescriptor> pds = new ArrayList<>();
+
+			Set<String> hashIgnoreFields = Arrays.stream(item.getClass().getDeclaredFields())
+					.filter(p -> p.isAnnotationPresent(HashIgnore.class))
+					.map(Field::getName)
+					.collect(Collectors.toSet());
+
+			for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(item.getClass())) {
+				if ("class".equals(pd.getName()) || keyPropertyNames.contains(pd.getName())) {
+					continue;
+				}
+
+				HashIgnore annotation = AnnotationUtils.findAnnotation(pd.getReadMethod(), HashIgnore.class);
+
+				if (annotation != null || hashIgnoreFields.contains(pd.getName())) {
+					continue;
+				}
+
+				pds.add(pd);
+			}
+
+			this.hashPropertyDescriptors = Collections.unmodifiableList(pds);
+		}
+
 		ObjectNode jsonNode = mapper.createObjectNode();
 
-		Set<String> hashIgnoreFields = Arrays.stream(item.getClass().getDeclaredFields())
-				.filter(p -> p.isAnnotationPresent(HashIgnore.class))
-				.map(Field::getName)
-				.collect(Collectors.toSet());
-
-		for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(item.getClass())) {
-			if ("class".equals(pd.getName()) || keyPropertyNames.contains(pd.getName())) {
-				continue;
-			}
-
-			HashIgnore annotation = AnnotationUtils.findAnnotation(pd.getReadMethod(), HashIgnore.class);
-
-			if (annotation != null || hashIgnoreFields.contains(pd.getName())) {
-				continue;
-			}
-
+		for (PropertyDescriptor pd : this.hashPropertyDescriptors) {
 			Object val = pd.getReadMethod().invoke(item);
 			jsonNode.putPOJO(pd.getName(), val);
 		}
