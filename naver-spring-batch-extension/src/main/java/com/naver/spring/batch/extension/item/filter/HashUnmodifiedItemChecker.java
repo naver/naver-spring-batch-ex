@@ -67,12 +67,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	public void beforeChunk(ChunkContext context) {
 		if (keyPrefix == null) {
 			String stepName = context.getStepContext().getStepName();
-
-			if (stepName.length() > 10) {
-				this.keyPrefix = stepName.substring(0, 10) + "_";
-			} else {
-				this.keyPrefix = stepName + "_";
-			}
+			this.keyPrefix = stepName + "_";
 		}
 	}
 
