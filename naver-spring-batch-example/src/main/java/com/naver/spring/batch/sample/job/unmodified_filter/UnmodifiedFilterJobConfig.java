@@ -46,7 +46,7 @@ public class UnmodifiedFilterJobConfig {
 
 	private Step unmodifiedFilterStep() throws Exception {
 		return stepBuilderFactory.get("unmodifiedFilterStep")
-				.<Sample4, Sample4> chunk(2)
+				.<Sample4, Sample4> chunk(5)
 				.reader(new Sample4ItemReader())
 				.processor(processor())
 				.writer(new LoggingItemWriter<>())
@@ -57,6 +57,7 @@ public class UnmodifiedFilterJobConfig {
 		HashUnmodifiedItemChecker<Sample4> checker = new HashUnmodifiedItemChecker<>();
 		checker.setHashRepository(new JdbcHashRepository(dataSource, transactionManager));
 		checker.setKeyPropertyNames(Arrays.asList("idInt", "idStr"));
+		checker.setExpiry(60);
 		checker.afterPropertiesSet();
 
 		UnmodifiedItemFilterProcessor<Sample4> filterProcessor = new UnmodifiedItemFilterProcessor<>();

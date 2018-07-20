@@ -9,8 +9,12 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 @SpringBootTest(classes = UnmodifiedFilterJobConfig.class)
-//@TestPropertySource(properties = "logging.level.com.naver.spring.batch.sample.job.unmodified_filter=warn")
+//@TestPropertySource(properties = {
+//		"logging.level.com.naver.spring.batch.extension.item.filter=debug",
+//		"logging.level.org.springframework.jdbc=debug"
+//})
 public class UnmodifiedFilterJobTest extends AbstractJobTest {
 	@Test
 	public void unmodifiedFilter_test() throws Exception {
