@@ -23,7 +23,8 @@ public class JdbcHashRepository implements HashRepository {
 
 	private static final String selectSql = "SELECT item_hash FROM BATCHEX_ITEM_HASH WHERE item_key = ? AND expiry > ?";
 	private static final String saveSqlForH2 = "MERGE INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) KEY (item_key) VALUES (?, ?, ?)";
-	private static final String saveSqlForMysql = "REPLACE INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) VALUES (?, ?, ?)";
+	private static final String saveSqlForMysql = "INSERT INTO BATCHEX_ITEM_HASH (item_key, item_hash, expiry) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE item_hash = VALUES(item_hash), expiry = VALUES(expiry)";
+	private static final String deleteExpiredSql = "DELETE FROM BATCHEX_ITEM_HASH WHERE expiry < ? LIMIT 100";
 
 	private final JdbcOperations jdbcOperations;
 	private final TransactionOperations transactionOperations;
@@ -65,6 +66,7 @@ public class JdbcHashRepository implements HashRepository {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				jdbcOperations.batchUpdate(sql, args);
+				jdbcOperations.update(deleteExpiredSql, new Date());
 			}
 		});
 	}
