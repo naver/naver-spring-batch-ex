@@ -163,7 +163,7 @@
 				<version>2.8.2</version>
 				<executions>
 					<execution>
-						<id>deploy</id>
+						<id>default-deploy</id>
 						<phase>deploy</phase>
 					</execution>
 				</executions>
