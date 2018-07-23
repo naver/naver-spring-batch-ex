@@ -75,6 +75,9 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 	@Override
 	public boolean check(T item) {
+		initKeyPropertyDescriptors(item);
+		initHashPropertyDescriptors(item);
+
 		try {
 			String key = generateKey(item);
 
@@ -108,7 +111,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	}
 
 
-	private String generateKey(T item) throws InvocationTargetException, IllegalAccessException {
+	private void initKeyPropertyDescriptors(T item) {
 		if (this.keyPropertyDescriptors == null) {
 			List<PropertyDescriptor> pds = new ArrayList<>(keyPropertyNames.size());
 
@@ -124,7 +127,9 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 			this.keyPropertyDescriptors = Collections.unmodifiableList(pds);
 		}
+	}
 
+	private String generateKey(T item) throws InvocationTargetException, IllegalAccessException {
 		StringBuilder sb = new StringBuilder(keyPrefix);
 
 		for (PropertyDescriptor propertyDescriptor : keyPropertyDescriptors) {
@@ -137,7 +142,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		return sb.toString();
 	}
 
-	private String generateHashValue(T item) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+	private void initHashPropertyDescriptors(T item) {
 		if (this.hashPropertyDescriptors == null) {
 			List<PropertyDescriptor> pds = new ArrayList<>();
 
@@ -162,7 +167,9 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 			this.hashPropertyDescriptors = Collections.unmodifiableList(pds);
 		}
+	}
 
+	private String generateHashValue(T item) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
 		ObjectNode jsonNode = mapper.createObjectNode();
 
 		for (PropertyDescriptor pd : this.hashPropertyDescriptors) {
