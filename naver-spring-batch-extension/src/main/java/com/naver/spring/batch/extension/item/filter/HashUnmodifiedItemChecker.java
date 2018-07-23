@@ -43,10 +43,6 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		this.md = MessageDigest.getInstance(algorithm);
 	}
 
-	public void setKeyPrefix(String keyPrefix) {
-		this.keyPrefix = keyPrefix;
-	}
-
 	/**
 	 * T item 의 키로 사용되는 property names
 	 * @param keyPropertyNames
