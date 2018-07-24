@@ -18,6 +18,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Jdbc 를 통해 hash 값을 저장하는 HashRepository 구현체
+ * 지원하는 DB: H2, MySql
+ *
+ * @author yongkyu.lee
+ * @since 0.1
+ */
 public class JdbcHashRepository implements HashRepository {
 	private static final Logger log = LoggerFactory.getLogger(JdbcHashRepository.class);
 
@@ -30,6 +37,12 @@ public class JdbcHashRepository implements HashRepository {
 	private final TransactionOperations transactionOperations;
 	private final DatabaseType databaseType;
 
+	/**
+	 *
+	 * @param dataSource
+	 * @param platformTransactionManager
+	 * @throws MetaDataAccessException, {@link UnsupportedDatabaseException}
+	 */
 	public JdbcHashRepository(DataSource dataSource, PlatformTransactionManager platformTransactionManager)
 			throws MetaDataAccessException {
 		this.transactionOperations = new TransactionTemplate(platformTransactionManager);

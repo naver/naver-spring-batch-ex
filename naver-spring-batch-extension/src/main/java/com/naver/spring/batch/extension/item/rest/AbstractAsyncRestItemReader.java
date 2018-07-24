@@ -23,6 +23,16 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <p>
+ * Restful api 로 부터 데이터를 읽어들이는 경우 Reader 구조를 제공한다.
+ * 여러개의 variables 로부터 요청하는 경우 {@link AsyncListenableTaskExecutor} 를 통해 Async 요청을 수행한다.
+ * response 에 대해서 {@link #convertResponse(ResponseEntity, Map)} ()} 를 통해 Object 매핑 방식을 하위 클래스에서 구현한다.
+ * </p>
+ *
+ * @author yongkyu.lee
+ * @since 0.1
+ */
 public abstract class AbstractAsyncRestItemReader<T> implements ItemReader<T>, InitializingBean {
 	private Logger log = LoggerFactory.getLogger(AbstractAsyncRestItemReader.class);
 

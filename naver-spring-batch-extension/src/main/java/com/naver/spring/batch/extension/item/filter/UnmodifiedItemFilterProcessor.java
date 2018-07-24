@@ -1,9 +1,3 @@
-/**
- * @(#) UnmodifiedItemFilterProcessor.class $version 2018. 05. 13
- * <p>
- * Copyright 2018 NAVER Corp. All rights Reserved.
- * NAVER PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.naver.spring.batch.extension.item.filter;
 
 import org.slf4j.Logger;
@@ -13,11 +7,21 @@ import org.springframework.batch.core.listener.ChunkListenerSupport;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 
 /**
- * UnmodifiedItemFilterProcessor 
+ * <p>
+ * {@link com.naver.spring.batch.extension.item.ListenerSupportCompositeItemProcessor} 를 통해 연결된
+ * Processor chain 의 적당한 위치 (보통은 가장 마지막) 에 추가하여 변경되지 않은 Item 에 대해 filter 처리 한다.
+ * </p>
  *
- * @author 스포츠_개발 (dl_sports_sweng@navercorp.com)
+ * <p>
+ * JobParameter 'UnmodifiedItemFilter-skip=true' 를 통해 모든 Item 을 filtering 하지 않도록 할 수 있다.
+ * 이때 모든 Item 의 hash 값은 다시 계산되어 저장되므로 이후 JobParameter 를 제거하더라도 filtering 이 정상적으로 처리된다.
+ * </p>
+ *
+ * @author yongkyu.lee
+ * @since 0.1
  */
 public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport implements ItemProcessor<T, T>, InitializingBean {
 	private Logger log = LoggerFactory.getLogger(UnmodifiedItemFilterProcessor.class);
@@ -63,5 +67,6 @@ public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport imple
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(checker, "checker must not be null");
 	}
 }

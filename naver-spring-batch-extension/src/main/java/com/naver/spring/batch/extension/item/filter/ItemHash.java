@@ -2,6 +2,12 @@ package com.naver.spring.batch.extension.item.filter;
 
 import java.util.Date;
 
+/**
+ * 저장될 hash값 객체
+ *
+ * @author yongkyu.lee
+ * @since 0.1
+ */
 public class ItemHash {
 	private String itemKey;
 	private String itemHash;

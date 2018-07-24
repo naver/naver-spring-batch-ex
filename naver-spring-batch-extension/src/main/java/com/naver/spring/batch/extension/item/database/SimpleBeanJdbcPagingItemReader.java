@@ -26,9 +26,14 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * SimpleBeanJdbcPagingItemReader
+ * <p>
+ * JdbcPagingItemReader 와 동일하게 동작한다.
+ * 하지만 {@link PagingQueryProvider} 를 통해 query 의 정보를 넘겨줘야 하는 JdbcPagingItemReader 와 달리
+ * 생성시 넘겨받는 mappedClass 정보를 통해 paging query 를 자동으로 생성해 준다.
+ * </p>
  *
- * @since 0.1.0
+ * @author yongkyu.lee
+ * @since 0.1
  */
 public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<T> implements InitializingBean {
 	private static final String START_AFTER_VALUE = "start.after";

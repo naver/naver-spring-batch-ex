@@ -8,6 +8,16 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
+/**
+ * <p>
+ * {@link org.springframework.batch.item.support.CompositeItemProcessor} 와 같이 Processor chain 구조를 제공한다.
+ * 또한 추가적으로 연결된 processor 들로 {@link StepExecutionListener} {@link ChunkListener} {@link ItemWriteListener}
+ * 에 대한 delegation 을 제공한다.
+ * </p>
+ *
+ * @author yongkyu.lee
+ * @since 0.1
+ */
 public class ListenerSupportCompositeItemProcessor<I, O> implements ItemProcessor<I, O>, InitializingBean,
 		StepExecutionListener, ChunkListener, ItemWriteListener<O> {
 

@@ -21,6 +21,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Item 에 대한 hash 값을 구한 후 해당 값을 통해 Item 의 변경 여부를 확인 한다.
+ *
+ * @author yongkyu.lee
+ * @since 0.1
+ */
 public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implements UnmodifiedItemChecker<T>, InitializingBean {
 	private Logger log = LoggerFactory.getLogger(HashUnmodifiedItemChecker.class);
 	private static final ObjectMapper mapper = new ObjectMapper();
@@ -39,6 +45,18 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		this.hashRepository = hashRepository;
 	}
 
+	/**
+	 * <p>
+	 * hash 값 계산에 사용될 hash 함수. default MD5
+	 * </p>
+	 * <ul>
+	 * <li>{@code MD5}</li>
+	 * <li>{@code SHA-1}</li>
+	 * <li>{@code SHA-256}</li>
+	 * </ul>
+	 * @param algorithm
+	 * @throws NoSuchAlgorithmException
+	 */
 	public void setHashAlgorithm(String algorithm) throws NoSuchAlgorithmException {
 		this.md = MessageDigest.getInstance(algorithm);
 	}
@@ -52,7 +70,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	}
 
 	/**
-	 * hash 값 만료시간 (초), default 만료 없음
+	 * hash 값 만료시간 (초), default 100 years
 	 * @param expiry
 	 */
 	public void setExpiry(int expiry) {

@@ -1,5 +1,11 @@
 package com.naver.spring.batch.extension.item.filter;
 
+/**
+ * 지원되지 않는 DB
+ *
+ * @author yongkyu.lee
+ * @since 0.1
+ */
 public class UnsupportedDatabaseException extends RuntimeException {
 	
 	public UnsupportedDatabaseException() {
