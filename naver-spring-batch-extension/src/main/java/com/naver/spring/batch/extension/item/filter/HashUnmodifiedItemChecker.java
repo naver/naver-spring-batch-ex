@@ -88,7 +88,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 			if (log.isDebugEnabled()) {
 				log.debug("item hash for '{}', generated value: '{}', stored value: '{}'",
-						key, hashValue, (storedHashValue != null) ? storedHashValue : "null");
+						key, hashValue, storedHashValue);
 			}
 
 			boolean eq = hashValue.equals(storedHashValue);
@@ -179,11 +179,13 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 			jsonNode.putPOJO(pd.getName(), val);
 		}
 
+		String hashSource = jsonNode.toString();
+
 		if (log.isDebugEnabled()) {
-			log.debug("hash inputs as json: {}", jsonNode.toString() );
+			log.debug("hash inputs as json: {}", hashSource);
 		}
 
-		return Base64.getEncoder().encodeToString(this.md.digest(mapper.writeValueAsBytes(jsonNode)));
+		return Base64.getEncoder().encodeToString(this.md.digest(hashSource.getBytes()));
 	}
 
 	@Override
