@@ -69,8 +69,10 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 	@Override
 	public void afterChunk(ChunkContext context) {
-		hashRepository.saveItemHashes(chunkItemHashes);
-		chunkItemHashes.clear();
+		if (!chunkItemHashes.isEmpty()) {
+			hashRepository.saveItemHashes(chunkItemHashes);
+			chunkItemHashes.clear();
+		}
 	}
 
 	@Override
