@@ -71,6 +71,13 @@ public abstract class AbstractAsyncRestItemReader<T> implements ItemReader<T>, I
 		this.responseTimeout = responseTimeout;
 	}
 
+	/**
+	 * responseEntiry 로부터 response body 를 parsing 해 List 로 리턴하도록 구현한다.
+	 *
+	 * @param responseEntity null 이면 responseEntity 반환에 실패.
+	 * @param uriVariable uri 에 포함된 변수 목록
+	 * @return response 의 List 형태
+	 */
 	abstract protected List<T> convertResponse(ResponseEntity<String> responseEntity, Map<String, ?> uriVariable);
 
 	@Override
