@@ -109,14 +109,14 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		initHashPropertyDescriptors(item);
 
 		try {
-			String key = generateKey(item);
-
-			String hashValue = generateHashValue(item);
+			String key = makeHashKey(item);
+			String hashSource = makeHashSource(item);
+			String hashValue = Base64.getEncoder().encodeToString(this.md.digest(hashSource.getBytes()));
 			String storedHashValue = hashRepository.getHashValue(key);
 
 			if (log.isDebugEnabled()) {
-				log.debug("item hash for '{}', generated value: '{}', stored value: '{}'",
-						key, hashValue, storedHashValue);
+				log.debug("\n\tHash Key: {}\n\tHash Source: {}\n\tHash Value: {}\n\tStored Hash Value: {}",
+						key, hashSource, hashValue, storedHashValue);
 			}
 
 			boolean eq = hashValue.equals(storedHashValue);
@@ -159,7 +159,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		}
 	}
 
-	private String generateKey(T item) throws InvocationTargetException, IllegalAccessException {
+	private String makeHashKey(T item) throws InvocationTargetException, IllegalAccessException {
 		StringBuilder sb = new StringBuilder(keyPrefix);
 
 		for (PropertyDescriptor propertyDescriptor : keyPropertyDescriptors) {
@@ -199,7 +199,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		}
 	}
 
-	private String generateHashValue(T item) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+	private String makeHashSource(T item) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
 		ObjectNode jsonNode = mapper.createObjectNode();
 
 		for (PropertyDescriptor pd : this.hashPropertyDescriptors) {
@@ -207,13 +207,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 			jsonNode.putPOJO(pd.getName(), val);
 		}
 
-		String hashSource = jsonNode.toString();
-
-		if (log.isDebugEnabled()) {
-			log.debug("hash inputs as json: {}", hashSource);
-		}
-
-		return Base64.getEncoder().encodeToString(this.md.digest(hashSource.getBytes()));
+		return jsonNode.toString();
 	}
 
 	@Override
@@ -224,6 +218,5 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		if (this.md == null) {
 			this.md = MessageDigest.getInstance("md5");
 		}
-
 	}
 }
