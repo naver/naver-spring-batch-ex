@@ -80,8 +80,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	@Override
 	public void beforeChunk(ChunkContext context) {
 		if (keyPrefix == null) {
-			String stepName = context.getStepContext().getStepName();
-			this.keyPrefix = stepName + "_";
+			this.keyPrefix = context.getStepContext().getStepName();
 		}
 	}
 
@@ -156,7 +155,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 			Method method = propertyDescriptor.getReadMethod();
 			Object value = method.invoke(item);
 
-			sb.append(value);
+			sb.append('-').append(value);
 		}
 
 		return sb.toString();
