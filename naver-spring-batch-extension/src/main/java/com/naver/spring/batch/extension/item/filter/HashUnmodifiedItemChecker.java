@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +38,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	private List<PropertyDescriptor> keyPropertyDescriptors;
 	private List<PropertyDescriptor> hashPropertyDescriptors;
 
-	private int expiry;
+	private long expiry;
 	private List<ItemHash> chunkItemHashes = new ArrayList<>();
 	private String keyPrefix;
 
@@ -74,7 +75,17 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	 * @param expiry
 	 */
 	public void setExpiry(int expiry) {
-		this.expiry = expiry;
+		this.setExpiry(expiry, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * hash 값 만료시간
+	 *
+	 * @param expiry
+	 * @param timeUnit
+	 */
+	public void setExpiry(int expiry, TimeUnit timeUnit) {
+		this.expiry = timeUnit.toMillis(expiry);
 	}
 
 	@Override
@@ -114,7 +125,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 				long ts = new Date().getTime();
 
 				if (expiry > 0) {
-					ts += (expiry * 1000);
+					ts += expiry;
 				} else {
 					ts += 3153600000000L; //100년
 				}
