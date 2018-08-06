@@ -55,8 +55,8 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	 * <li>{@code SHA-1}</li>
 	 * <li>{@code SHA-256}</li>
 	 * </ul>
-	 * @param algorithm
-	 * @throws NoSuchAlgorithmException
+	 * @param algorithm algorithm name
+	 * @throws NoSuchAlgorithmException {@link NoSuchAlgorithmException}
 	 */
 	public void setHashAlgorithm(String algorithm) throws NoSuchAlgorithmException {
 		this.md = MessageDigest.getInstance(algorithm);
@@ -64,7 +64,8 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 	/**
 	 * T item 의 키로 사용되는 property names
-	 * @param keyPropertyNames
+	 *
+	 * @param keyPropertyNames item 에 대한 hash 값 저장시 키로 사용될 property names
 	 */
 	public void setKeyPropertyNames(List<String> keyPropertyNames) {
 		this.keyPropertyNames = keyPropertyNames;
@@ -72,7 +73,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 	/**
 	 * hash 값 만료시간 (초), default 100 years
-	 * @param expiry
+	 * @param expiry hash 값 만료시간 (초)
 	 */
 	public void setExpiry(int expiry) {
 		this.setExpiry(expiry, TimeUnit.SECONDS);
@@ -81,8 +82,8 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	/**
 	 * hash 값 만료시간
 	 *
-	 * @param expiry
-	 * @param timeUnit
+	 * @param expiry hash 값 만료시간. (timeUnit 단위의 값)
+	 * @param timeUnit expiry 에 대한 시간 단위
 	 */
 	public void setExpiry(int expiry, TimeUnit timeUnit) {
 		this.expiry = timeUnit.toMillis(expiry);

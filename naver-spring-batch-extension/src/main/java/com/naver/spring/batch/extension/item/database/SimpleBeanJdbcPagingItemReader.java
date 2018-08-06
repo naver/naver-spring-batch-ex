@@ -87,7 +87,7 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 	/**
 	 * from clause 에 들어갈 테이블명. 빈값이면 mappedClass 의 camelcaseToUnderscore 처리된 class 명
 	 *
-	 * @param tableName
+	 * @param tableName tableName (default: mappedClass 의 camelcaseToUnderscore 처리된 class 명)
 	 */
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
@@ -101,7 +101,7 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 	 * select clause 에 나열될 column 이름은 기본적으로 propertyName 을 underscore 표현으로 처리하지만
 	 * 직접 매핑이 필요한 경우 추가해 준다.
 	 *
-	 * @param columnMappings
+	 * @param columnMappings map of {propertyName : column name}
 	 */
 	public void setColumnMappings(Map<String, String> columnMappings) {
 		this.columnMappings = columnMappings;

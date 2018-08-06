@@ -39,9 +39,9 @@ public class JdbcHashRepository implements HashRepository {
 
 	/**
 	 *
-	 * @param dataSource
-	 * @param platformTransactionManager
-	 * @throws MetaDataAccessException, {@link UnsupportedDatabaseException}
+	 * @param dataSource {@link DataSource}
+	 * @param platformTransactionManager {@link PlatformTransactionManager}
+	 * @throws MetaDataAccessException {@link UnsupportedDatabaseException}
 	 */
 	public JdbcHashRepository(DataSource dataSource, PlatformTransactionManager platformTransactionManager)
 			throws MetaDataAccessException {
