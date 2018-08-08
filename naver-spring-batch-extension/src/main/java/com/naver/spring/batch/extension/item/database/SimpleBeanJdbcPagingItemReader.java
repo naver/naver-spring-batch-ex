@@ -107,8 +107,20 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		this.columnMappings = columnMappings;
 	}
 
+	/**
+	 * @param sortKeys the sortKeys to set
+	 */
 	public void setSortKeys(Map<String, Order> sortKeys) {
 		this.sortKeys = sortKeys;
+	}
+
+	public void setSortKey(String key) {
+		Assert.doesNotContain(key, ",", "String setter is valid for a single ASC key only");
+
+		Map<String, Order> keys = new LinkedHashMap<String, Order>();
+		keys.put(key, Order.ASCENDING);
+
+		this.sortKeys = keys;
 	}
 
 	@Override
