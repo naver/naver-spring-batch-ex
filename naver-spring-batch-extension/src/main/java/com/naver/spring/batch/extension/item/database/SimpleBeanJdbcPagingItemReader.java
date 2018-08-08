@@ -108,6 +108,14 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 	}
 
 	/**
+	 * Result 매핑에 사용될 rowMapper. default BeanPropertyRowMapper 가 사용됨
+	 * @param rowMapper
+	 */
+	public void setRowMapper(RowMapper<T> rowMapper) {
+		this.rowMapper = rowMapper;
+	}
+
+	/**
 	 * @param sortKeys the sortKeys to set
 	 */
 	public void setSortKeys(Map<String, Order> sortKeys) {
@@ -146,7 +154,9 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 			}
 		}
 
-		this.rowMapper = new BeanPropertyRowMapper<>(mappedClass);
+		if (this.rowMapper == null) {
+			this.rowMapper = new BeanPropertyRowMapper<>(mappedClass);
+		}
 
 		if (this.tableName == null) {
 			this.tableName = camelcaseToUnderscore(mappedClass.getSimpleName());
