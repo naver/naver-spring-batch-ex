@@ -55,7 +55,6 @@ public class User {
             <property name="sortKey" value="id" />
         </bean>
     </property>
-    <property name="pageSize" value="10" />
     <property name="rowMapper">
         <bean class="...UserRowMapper" />
     </property>
@@ -64,9 +63,9 @@ public class User {
 <!--SimpleBeanJdbcPagingItemReader-->
 
 <bean id="simpleBeanJdbcPagingItemReader" class="com.naver.spring.batch.extension.item.database.SimpleBeanJdbcPagingItemReader" scope="step">
-    <constructor-arg value="...User"/>
+    <constructor-arg value="User"/>
     <property name="dataSource" ref="dataSource" />
-    <property name="pageSize" value="10" />
+    <property name="sortKey" value="id" />
 </bean>
 
 ```
