@@ -8,10 +8,7 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -89,13 +86,7 @@ public abstract class AbstractAsyncRestItemReader<T> implements ItemReader<T>, I
 			while (this.uriVariablesIterator.hasNext()) {
 				Map<String, ?> uriVariable = this.uriVariablesIterator.next();
 				ListenableFuture<ResponseEntity<String>> listenableFuture = responseMap.get(uriVariable);
-				ResponseEntity<String> responseEntity = null;
-
-				try {
-					responseEntity = listenableFuture.get(this.responseTimeout, TimeUnit.SECONDS);
-				} catch (Exception e) {
-					log.warn("retrieving response error", e);
-				}
+				ResponseEntity<String> responseEntity = listenableFuture.get(this.responseTimeout, TimeUnit.SECONDS);
 
 				List<T> results = convertResponse(responseEntity, uriVariable);
 
