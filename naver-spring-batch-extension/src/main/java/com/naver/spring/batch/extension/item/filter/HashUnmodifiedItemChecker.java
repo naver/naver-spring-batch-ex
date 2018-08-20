@@ -35,6 +35,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	private HashRepository hashRepository;
 	private MessageDigest md;
 	private List<String> keyPropertyNames;
+	private List<String> ignorePropertyNames;
 	private List<PropertyDescriptor> keyPropertyDescriptors;
 	private List<PropertyDescriptor> hashPropertyDescriptors;
 
@@ -69,6 +70,17 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	 */
 	public void setKeyPropertyNames(List<String> keyPropertyNames) {
 		this.keyPropertyNames = keyPropertyNames;
+	}
+
+	/**
+	 * Item 에 대한 hash값 생성시 제외할 property names
+	 *
+	 * <code>@HashIgnore</code> 로 지정된 프로퍼티와 함께 제외 된다.
+	 *
+	 * @param ignorePropertyNames item 에 대한 hash 값 생성시 제외할 property names
+	 */
+	public void setIgnorePropertyNames(List<String> ignorePropertyNames) {
+		this.ignorePropertyNames = ignorePropertyNames;
 	}
 
 	/**
@@ -161,7 +173,11 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	}
 
 	private String makeHashKey(T item) throws InvocationTargetException, IllegalAccessException {
-		StringBuilder sb = new StringBuilder(keyPrefix);
+		StringBuilder sb =  new StringBuilder();
+
+		if (keyPrefix != null) {
+			sb.append(keyPrefix);
+		}
 
 		for (PropertyDescriptor propertyDescriptor : keyPropertyDescriptors) {
 			Method method = propertyDescriptor.getReadMethod();
@@ -181,6 +197,10 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 					.filter(p -> p.isAnnotationPresent(HashIgnore.class))
 					.map(Field::getName)
 					.collect(Collectors.toSet());
+
+			if (this.ignorePropertyNames != null && !this.ignorePropertyNames.isEmpty()) {
+				hashIgnoreFields.addAll(this.ignorePropertyNames);
+			}
 
 			for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(item.getClass())) {
 				if ("class".equals(pd.getName()) || keyPropertyNames.contains(pd.getName())) {
