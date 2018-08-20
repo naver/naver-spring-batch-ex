@@ -1,11 +1,15 @@
 package com.naver.spring.batch.extension.item.filter;
 
 public class TestObj {
+	@HashKey
 	private int id;
+
 	private String name;
+
 	private int age;
 
 	private int randomVal;
+
 	@HashIgnore
 	private int randomVal2;
 

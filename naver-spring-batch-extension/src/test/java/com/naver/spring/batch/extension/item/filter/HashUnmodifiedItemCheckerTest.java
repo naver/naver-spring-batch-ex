@@ -1,6 +1,7 @@
 package com.naver.spring.batch.extension.item.filter;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -14,20 +15,21 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HashUnmodifiedItemCheckerTest {
+	private final List<ItemHash> storedItemHash = new ArrayList<>();
 
 	@Mock
 	private HashRepository hashRepository;
 
-	@Test
-	public void check() throws Exception {
-		final List<ItemHash> storedItemHash = new ArrayList<>();
-
+	@Before
+	public void before() {
+		//Mock for hashRepository.saveItemHashes()
 		Mockito.doAnswer(invocation -> {
 			Object[] args = invocation.getArguments();
 			storedItemHash.addAll((List)args[0]);
 			return null;
 		}).when(hashRepository).saveItemHashes(Matchers.anyListOf(ItemHash.class));
 
+		//Mock for hashRepository.getHashValue()
 		Mockito.doAnswer(invocation -> {
 			Object[] args = invocation.getArguments();
 			String hashKey = (String)args[0];
@@ -40,10 +42,13 @@ public class HashUnmodifiedItemCheckerTest {
 
 			return null;
 		}).when(hashRepository).getHashValue(Matchers.anyString());
+	}
 
+	@Test
+	public void check() throws Exception {
 		HashUnmodifiedItemChecker<TestObj> checker = new HashUnmodifiedItemChecker<>();
 		checker.setHashRepository(hashRepository);
-		checker.setKeyPropertyNames(Arrays.asList("id"));
+		checker.setKeyPropertyNames(Arrays.asList("name"));
 
 		checker.setIgnorePropertyNames(Arrays.asList("randomVal", "randomVal2"));
 		checker.afterPropertiesSet();

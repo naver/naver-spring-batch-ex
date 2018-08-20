@@ -118,8 +118,7 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 	@Override
 	public boolean check(T item) {
-		initKeyPropertyDescriptors(item);
-		initHashPropertyDescriptors(item);
+		initPropertyDescriptors(item);
 
 		try {
 			String key = makeHashKey(item);
@@ -153,25 +152,6 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		return false;
 	}
 
-
-	private void initKeyPropertyDescriptors(T item) {
-		if (this.keyPropertyDescriptors == null) {
-			List<PropertyDescriptor> pds = new ArrayList<>(keyPropertyNames.size());
-
-			for (String keyProperty : keyPropertyNames) {
-				PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(item.getClass(), keyProperty);
-
-				Assert.notNull(propertyDescriptor, "'" + keyProperty + "' is invalid property name");
-				Assert.isTrue(BeanUtils.isSimpleValueType(propertyDescriptor.getPropertyType()),
-						"'" + keyProperty + "' value type must be simple value");
-
-				pds.add(propertyDescriptor);
-			}
-
-			this.keyPropertyDescriptors = Collections.unmodifiableList(pds);
-		}
-	}
-
 	private String makeHashKey(T item) throws InvocationTargetException, IllegalAccessException {
 		StringBuilder sb =  new StringBuilder();
 
@@ -189,9 +169,17 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		return sb.toString();
 	}
 
-	private void initHashPropertyDescriptors(T item) {
-		if (this.hashPropertyDescriptors == null) {
-			List<PropertyDescriptor> pds = new ArrayList<>();
+	private void initPropertyDescriptors(T item) {
+		if (this.keyPropertyDescriptors == null) {
+
+			Set<String> hashKeyFields = Arrays.stream(item.getClass().getDeclaredFields())
+					.filter(p -> p.isAnnotationPresent(HashKey.class))
+					.map(Field::getName)
+					.collect(Collectors.toSet());
+
+			if (this.keyPropertyNames != null && !this.keyPropertyNames.isEmpty()) {
+				hashKeyFields.addAll(this.keyPropertyNames);
+			}
 
 			Set<String> hashIgnoreFields = Arrays.stream(item.getClass().getDeclaredFields())
 					.filter(p -> p.isAnnotationPresent(HashIgnore.class))
@@ -202,8 +190,22 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 				hashIgnoreFields.addAll(this.ignorePropertyNames);
 			}
 
-			for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(item.getClass())) {
-				if ("class".equals(pd.getName()) || keyPropertyNames.contains(pd.getName())) {
+			PropertyDescriptor[] pdsAll = BeanUtils.getPropertyDescriptors(item.getClass());
+			List<PropertyDescriptor> hashKeyPds = new ArrayList<>(hashKeyFields.size());
+			List<PropertyDescriptor> hashPds = new ArrayList<>(pdsAll.length);
+
+			for (PropertyDescriptor pd : pdsAll) {
+				if ("class".equals(pd.getName())) {
+					continue;
+				}
+
+				HashKey annHashKey = AnnotationUtils.findAnnotation(pd.getReadMethod(), HashKey.class);
+
+				if (annHashKey != null || hashKeyFields.contains(pd.getName())) {
+					Assert.isTrue(BeanUtils.isSimpleValueType(pd.getPropertyType()),
+							"'" + pd.getName() + "' value type must be simple value");
+
+					hashKeyPds.add(pd);
 					continue;
 				}
 
@@ -213,10 +215,16 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 					continue;
 				}
 
-				pds.add(pd);
+				hashPds.add(pd);
 			}
 
-			this.hashPropertyDescriptors = Collections.unmodifiableList(pds);
+			Assert.notEmpty(hashKeyPds, "Properties for hash key must not be empty");
+			Assert.notEmpty(hashPds, "Properties for hash source must not be empty");
+
+			hashKeyPds.sort(Comparator.comparing(PropertyDescriptor::getName));
+
+			this.keyPropertyDescriptors = Collections.unmodifiableList(hashKeyPds);
+			this.hashPropertyDescriptors = Collections.unmodifiableList(hashPds);
 		}
 	}
 
@@ -234,7 +242,6 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(hashRepository, "hashRepository must not be null");
-		Assert.notEmpty(keyPropertyNames, "keyPropertyNames must not be empty");
 
 		if (this.md == null) {
 			this.md = MessageDigest.getInstance("md5");
