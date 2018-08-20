@@ -101,11 +101,12 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		this.expiry = timeUnit.toMillis(expiry);
 	}
 
-	@Override
-	public void beforeChunk(ChunkContext context) {
-		if (keyPrefix == null) {
-			this.keyPrefix = context.getStepContext().getStepName();
-		}
+	/**
+	 * hashkey string 생성시 사용될 prefix. default empty string
+	 * @param keyPrefix hashkey string 생성시 사용될 prefix
+	 */
+	public void setKeyPrefix(String keyPrefix) {
+		this.keyPrefix = keyPrefix;
 	}
 
 	@Override
@@ -156,8 +157,10 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 		StringBuilder sb =  new StringBuilder();
 
 		if (keyPrefix != null) {
-			sb.append(keyPrefix);
+			sb.append(keyPrefix).append('.');
 		}
+
+		sb.append(item.getClass().getSimpleName());
 
 		for (PropertyDescriptor propertyDescriptor : keyPropertyDescriptors) {
 			Method method = propertyDescriptor.getReadMethod();
