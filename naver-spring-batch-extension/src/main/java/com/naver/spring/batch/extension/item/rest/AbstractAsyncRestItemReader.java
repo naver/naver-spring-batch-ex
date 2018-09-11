@@ -8,7 +8,10 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -22,7 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- * Restful api 로 부터 데이터를 읽어들이는 경우 Reader 구조를 제공한다.
+ * 페이징 처리된 Rest API 로부터 데이터를 읽어 들이기 위한 Item Reader.
+ *
  * 여러개의 variables 로부터 요청하는 경우 {@link AsyncListenableTaskExecutor} 를 통해 Async 요청을 수행한다.
  * response 에 대해서 {@link #convertResponse(ResponseEntity, Map)} ()} 를 통해 Object 매핑 방식을 하위 클래스에서 구현한다.
  * </p>
@@ -75,7 +79,7 @@ public abstract class AbstractAsyncRestItemReader<T> implements ItemReader<T>, I
 	 * @param uriVariable uri 에 포함된 변수 목록
 	 * @return response 의 List 형태
 	 */
-	abstract protected List<T> convertResponse(ResponseEntity<String> responseEntity, Map<String, ?> uriVariable);
+	abstract protected List<T> convertResponse(ResponseEntity<String> responseEntity, Map<String, ?> uriVariable) throws Exception;
 
 	@Override
 	public T read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
