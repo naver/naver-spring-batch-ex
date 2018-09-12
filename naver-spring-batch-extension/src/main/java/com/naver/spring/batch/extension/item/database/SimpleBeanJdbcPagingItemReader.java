@@ -87,11 +87,9 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 	}
 
 	/**
-	 * The parameter values to be used for the query execution. If you use named
-	 * parameters then the key should be the name used in the query clause. If
-	 * you use "?" placeholders then the key should be the relative index that
-	 * the parameter appears in the query string built using the select, from
-	 * and where clauses specified.
+	 * 쿼리 실행에 사용될 파라미터 값이다.
+	 * 만약 named parameter 를 사용하려면 key 는 쿼리에 포함된 name 이 되어야 하고,
+	 * placeholders (?) 를 사용하려면 key 는 relative index 가 되어야 한다.
 	 *
 	 * @param parameterValues the values keyed by the parameter named/index used
 	 * in the query string.
@@ -190,6 +188,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		this.remainingPagesSql = queryProvider.generateRemainingPagesQuery(getPageSize());
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void doReadPage() {
@@ -242,6 +244,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		results.addAll(result);
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	@Override
 	public void update(ExecutionContext executionContext) throws ItemStreamException {
 		super.update(executionContext);
@@ -256,10 +262,18 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		}
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	private boolean isAtEndOfPage() {
 		return getCurrentItemCount() % getPageSize() == 0;
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public void open(ExecutionContext executionContext) {
@@ -274,6 +288,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		super.open(executionContext);
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	@Override
 	protected void doJumpToPage(int itemIndex) {
 		if (startAfterValues == null && getPage() > 0) {
@@ -293,6 +311,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		}
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	private Map<String, Object> getParameterMap(Map<String, Object> values, Map<String, Object> sortKeyValues) {
 		Map<String, Object> parameterMap = new LinkedHashMap<String, Object>();
 		if (values != null) {
@@ -309,6 +331,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		return parameterMap;
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	private List<Object> getParameterList(Map<String, Object> values, Map<String, Object> sortKeyValue) {
 		SortedMap<String, Object> sm = new TreeMap<>();
 		if (values != null) {
@@ -334,6 +360,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		return parameterList;
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	private class PagingRowMapper implements RowMapper<T> {
 		@Override
 		public T mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -346,6 +376,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		}
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/master/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/JdbcPagingItemReader.java
+	 */
 	private JdbcTemplate getJdbcTemplate() {
 		return (JdbcTemplate) namedParameterJdbcTemplate.getJdbcOperations();
 	}
@@ -372,6 +406,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		return result.toString();
 	}
 
+	/*
+	 * copied from spring-batch
+	 * https://github.com/spring-projects/spring-batch/blob/547533fab072289c062916e51c589de36ea3dfe2/spring-batch-infrastructure/src/main/java/org/springframework/batch/item/database/builder/JdbcPagingItemReaderBuilder.java
+	 */
 	private AbstractSqlPagingQueryProvider determineQueryProvider(DataSource dataSource) {
 		try {
 			DatabaseType databaseType = DatabaseType.fromMetaData(dataSource);
