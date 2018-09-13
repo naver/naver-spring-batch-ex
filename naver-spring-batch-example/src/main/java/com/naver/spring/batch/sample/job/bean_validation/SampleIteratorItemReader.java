@@ -44,7 +44,7 @@ public class SampleIteratorItemReader implements ItemReader<People3> {
 	}
 
 	@Override
-	public People3 read() throws Exception, UnexpectedInputException, org.springframework.batch.item.ParseException, NonTransientResourceException {
+	public People3 read() throws Exception {
 		if (iter.hasNext()) {
 			return iter.next();
 		}
