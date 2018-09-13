@@ -15,10 +15,10 @@ limitations under the License.
  */
 package com.naver.spring.batch.extension.validation.constraints;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * <p>
@@ -29,22 +29,29 @@ import java.net.URL;
  * @since 0.1
  */
 public class UrlExistsValidator implements ConstraintValidator<UrlExists, String> {
-	private final String USER_AGENT = "Mozilla/5.0";
+	private static final String USER_AGENT = "Mozilla/5.0";
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
+		int responseCode = -1;
+		HttpURLConnection con = null;
+
 		try {
 			URL url = new URL(value);
 
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("HEAD");
 			con.setRequestProperty("User-Agent", USER_AGENT);
-			int responseCode = con.getResponseCode();
+			responseCode = con.getResponseCode();
 
-			return responseCode == 200;
 		} catch (java.io.IOException ignored) {
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
 		}
 
-		return false;
+		return responseCode == 200;
+
 	}
 }
