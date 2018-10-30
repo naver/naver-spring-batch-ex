@@ -9,12 +9,12 @@ maven
 <dependency>
     <groupId>com.naver.spring.batch</groupId>
     <artifactId>naver-spring-batch-extension</artifactId>
-    <version>${version}</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 gradle
 ```groovy
-compile('com.naver.spring.batch:naver-spring-batch-extension:${version}')
+compile('com.naver.spring.batch:naver-spring-batch-extension:0.1.0')
 ```
 
 ## 제공 모듈
