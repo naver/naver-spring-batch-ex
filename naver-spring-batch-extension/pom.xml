@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.naver.spring.batch</groupId>
 	<artifactId>naver-spring-batch-extension</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>naver-spring-batch-extension</name>
