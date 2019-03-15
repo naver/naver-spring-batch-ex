@@ -43,9 +43,14 @@ public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport imple
 
 	private UnmodifiedItemChecker<T> checker;
 	private boolean skipUnmodifiedItemCheck = false;
+	private boolean skipOnException = false;
 
 	public void setChecker(UnmodifiedItemChecker<T> checker) {
 		this.checker = checker;
+	}
+
+	public void setSkipOnException(boolean skipOnException) {
+		this.skipOnException = skipOnException;
 	}
 
 	@Override
@@ -67,7 +72,18 @@ public class UnmodifiedItemFilterProcessor<T> extends ChunkListenerSupport imple
 
 	@Override
 	public T process(T item) throws Exception {
-		if (checker.check(item)) {
+		boolean unmodified = false;
+
+		try {
+			unmodified = checker.check(item);
+		} catch (Exception e) {
+			log.warn("UnmodifiedItemChecker Error", e);
+			if (!skipOnException) {
+				throw e;
+			}
+		}
+
+		if (unmodified) {
 			if (log.isDebugEnabled()) {
 				log.debug("Item filtered : {}", item );
 			}
