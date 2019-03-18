@@ -76,6 +76,7 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 	private String whereClause;
 	private Map<String, String> columnMappings;
 	private Map<String, Order> sortKeys;
+	private List<String> excludePropertyNames;
 
 	public SimpleBeanJdbcPagingItemReader(Class<T> mappedClass) {
 		setName(ClassUtils.getShortName(SimpleBeanJdbcPagingItemReader.class));
@@ -144,6 +145,14 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		this.sortKeys = keys;
 	}
 
+	/**
+	 * query 생성시 제외할 property 이름 목록
+	 * @param excludePropertyNames
+	 */
+	public void setExcludePropertyNames(List<String> excludePropertyNames) {
+		this.excludePropertyNames = excludePropertyNames;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
@@ -158,6 +167,10 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 		for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(mappedClass)) {
 			if (pd.getWriteMethod() != null) {
 				String propName = pd.getName();
+
+				if (excludePropertyNames != null && excludePropertyNames.contains(propName)) {
+					continue;
+				}
 
 				if (this.columnMappings != null && this.columnMappings.containsKey(propName)) {
 					columnNames.add(this.columnMappings.get(propName));
