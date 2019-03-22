@@ -18,7 +18,6 @@ package com.naver.spring.batch.extension.item.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.support.DatabaseType;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.MetaDataAccessException;
@@ -71,11 +70,7 @@ public class JdbcHashRepository implements HashRepository {
 
 	@Override
 	public String getHashValue(String itemKey) {
-		try {
-			return jdbcOperations.queryForObject(selectSql, String.class, itemKey, new Date());
-		} catch (EmptyResultDataAccessException ignored) {}
-
-		return null;
+		return jdbcOperations.queryForObject(selectSql, String.class, itemKey, new Date());
 	}
 
 	@Override

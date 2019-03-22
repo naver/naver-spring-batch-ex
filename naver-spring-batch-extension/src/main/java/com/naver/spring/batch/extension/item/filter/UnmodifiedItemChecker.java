@@ -28,5 +28,5 @@ public interface UnmodifiedItemChecker<T> {
 	 * @param item 변경 여부를 확인할 item
 	 * @return true - 변경되지 않음, false - 변경되었거나 처음 처리됨
 	 */
-	boolean check(T item);
+	boolean check(T item) throws Exception;
 }

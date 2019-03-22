@@ -133,39 +133,33 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	}
 
 	@Override
-	public boolean check(T item) {
+	public boolean check(T item) throws Exception {
 		initPropertyDescriptors(item);
 
-		try {
-			String key = makeHashKey(item);
-			String hashSource = makeHashSource(item);
-			String hashValue = Base64.getEncoder().encodeToString(this.md.digest(hashSource.getBytes()));
-			String storedHashValue = hashRepository.getHashValue(key);
+		String key = makeHashKey(item);
+		String hashSource = makeHashSource(item);
+		String hashValue = Base64.getEncoder().encodeToString(this.md.digest(hashSource.getBytes()));
+		String storedHashValue = hashRepository.getHashValue(key);
 
-			if (log.isDebugEnabled()) {
-				log.debug("\n\tHash Key: {}\n\tHash Source: {}\n\tHash Value: {}\n\tStored Hash Value: {}",
-						key, hashSource, hashValue, storedHashValue);
-			}
-
-			boolean eq = hashValue.equals(storedHashValue);
-
-			if (!eq) {
-				long ts = new Date().getTime();
-
-				if (expiry > 0) {
-					ts += expiry;
-				} else {
-					ts += 3153600000000L; //100년
-				}
-				chunkItemHashes.add(new ItemHash(key, hashValue, new Date(ts)));
-			}
-
-			return eq;
-		} catch (Exception e) {
-			log.error("Error HashUnmodifiedItemChecker", e);
+		if (log.isDebugEnabled()) {
+			log.debug("\n\tHash Key: {}\n\tHash Source: {}\n\tHash Value: {}\n\tStored Hash Value: {}",
+					key, hashSource, hashValue, storedHashValue);
 		}
 
-		return false;
+		boolean eq = hashValue.equals(storedHashValue);
+
+		if (!eq) {
+			long ts = new Date().getTime();
+
+			if (expiry > 0) {
+				ts += expiry;
+			} else {
+				ts += 3153600000000L; //100년
+			}
+			chunkItemHashes.add(new ItemHash(key, hashValue, new Date(ts)));
+		}
+
+		return eq;
 	}
 
 	private String makeHashKey(T item) throws InvocationTargetException, IllegalAccessException {
