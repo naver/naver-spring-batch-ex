@@ -23,9 +23,13 @@
 	</properties>
 
 	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
 		<repository>
-			<id>naver-spring-batch-extension</id>
-			<url>https://api.bintray.com/maven/fomuon/com.naver.spring.batch/naver-spring-batch-extension/;publish=1</url>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
 
@@ -48,8 +52,8 @@
 		<url>https://github.com/naver/naver-spring-batch-ex</url>
 		<connection>scm:git:https://github.com/naver/naver-spring-batch-ex.git</connection>
 		<developerConnection>scm:git:https://github.com/naver/naver-spring-batch-ex.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<dependencies>
 		<dependency>
