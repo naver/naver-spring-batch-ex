@@ -21,6 +21,7 @@ import org.springframework.batch.support.DatabaseType;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.MetaDataAccessException;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -70,7 +71,15 @@ public class JdbcHashRepository implements HashRepository {
 
 	@Override
 	public String getHashValue(String itemKey) {
-		return jdbcOperations.queryForObject(selectSql, String.class, itemKey, new Date());
+		String hashValue = null;
+
+		SqlRowSet rowSet = jdbcOperations.queryForRowSet(selectSql, itemKey, new Date());
+
+		if (rowSet.next()) {
+			hashValue = rowSet.getString("item_hash");
+		}
+
+		return hashValue;
 	}
 
 	@Override
