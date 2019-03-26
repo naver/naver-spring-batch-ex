@@ -32,7 +32,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -48,12 +47,11 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private HashRepository hashRepository;
-	private MessageDigest md;
 	private List<String> keyPropertyNames;
 	private List<String> ignorePropertyNames;
 	private List<PropertyDescriptor> keyPropertyDescriptors;
 	private List<PropertyDescriptor> hashPropertyDescriptors;
-
+	private String hashAlgorithm = "md5";
 	private long expiry;
 	private List<ItemHash> chunkItemHashes = new ArrayList<>();
 	private String keyPrefix;
@@ -72,10 +70,9 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	 * <li>{@code SHA-256}</li>
 	 * </ul>
 	 * @param algorithm algorithm name
-	 * @throws NoSuchAlgorithmException {@link NoSuchAlgorithmException}
 	 */
-	public void setHashAlgorithm(String algorithm) throws NoSuchAlgorithmException {
-		this.md = MessageDigest.getInstance(algorithm);
+	public void setHashAlgorithm(String algorithm) {
+		this.hashAlgorithm = algorithm;
 	}
 
 	/**
@@ -138,7 +135,10 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 
 		String key = makeHashKey(item);
 		String hashSource = makeHashSource(item);
-		String hashValue = Base64.getEncoder().encodeToString(this.md.digest(hashSource.getBytes()));
+
+		MessageDigest md = MessageDigest.getInstance(this.hashAlgorithm);
+		String hashValue = Base64.getEncoder().encodeToString(md.digest(hashSource.getBytes()));
+
 		String storedHashValue = hashRepository.getHashValue(key);
 
 		if (log.isDebugEnabled()) {
@@ -254,9 +254,5 @@ public class HashUnmodifiedItemChecker<T> extends ChunkListenerSupport implement
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(hashRepository, "hashRepository must not be null");
-
-		if (this.md == null) {
-			this.md = MessageDigest.getInstance("md5");
-		}
 	}
 }
