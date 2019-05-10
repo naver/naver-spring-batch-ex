@@ -188,8 +188,15 @@ public class SimpleBeanJdbcPagingItemReader<T> extends AbstractPagingItemReader<
 			this.tableName = camelcaseToUnderscore(mappedClass.getSimpleName());
 		}
 
+		StringBuilder selectClause = new StringBuilder();
+
+		for (String columnName : columnNames) {
+			selectClause.append('`').append(columnName).append("`,");
+		}
+		selectClause.deleteCharAt(selectClause.length() - 1);
+
 		AbstractSqlPagingQueryProvider queryProvider = determineQueryProvider(dataSource);
-		queryProvider.setSelectClause(String.join(",", columnNames));
+		queryProvider.setSelectClause(selectClause.toString());
 		queryProvider.setFromClause(this.tableName);
 		queryProvider.setWhereClause(this.whereClause);
 		queryProvider.setSortKeys(this.sortKeys);
