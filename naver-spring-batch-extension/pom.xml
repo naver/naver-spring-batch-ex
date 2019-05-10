@@ -23,6 +23,10 @@
 	</properties>
 
 	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
 		<repository>
 			<id>naver-spring-batch-extension</id>
 			<url>https://api.bintray.com/maven/fomuon/com.naver.spring.batch/naver-spring-batch-extension/;publish=1</url>
