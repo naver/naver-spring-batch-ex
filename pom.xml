@@ -7,7 +7,7 @@
 	<groupId>com.naver.spring.batch</groupId>
 	<artifactId>naver-spring-batch-ex</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1.1</version>
+	<version>1.1.2-SNAPSHOT</version>
 
 	<modules>
 		<module>naver-spring-batch-extension</module>
